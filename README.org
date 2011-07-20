@@ -1,0 +1,18 @@
+# -*- org -*-
+
+# <!-- Time-stamp: "2010-11-29 10:25:30 Monday by taoshanwen" -->
+
+#+OPTIONS: ^nil author:nil timestamp:nil creator:nil
+
+DEA
+
+* DEA - Dot emacs of [[http://ahei.info][ahei]]
+
+DEA stands for "Dot emacs of ahei", its target is provide powerful emacs profile for emacser.
+
+详情请查看[[http://emacser.com/dea.htm][DEA]]
+
+*注意:*
+由于google code的bug系统不能及时发邮件通知, 而Emacs中文网有留言的话会及时通知给作者, 另外, 由于平时工作比较忙, 有时间会先去关注一下Emacs中文网, DEA的这个google code项目主页来的比较少, google code目前我只是拿它来当代码仓库,所以, 如果有关于DEA的bug可以发留言到[[http://emacser.com/dea.htm][这个页面]], 或者直接发到我的邮箱, 当然, 在google code这个项目的bug系统里报也行, 报完后方便的话可以发个[[mailto:ahei0802@gmail.com][邮件]]告知我一下,免得我可能没有及时关注到, 还请谅解. :)
+
+msn/gtalk/email/qq: ahei0802@gmail.com

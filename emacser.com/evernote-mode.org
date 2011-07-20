@@ -1,0 +1,348 @@
+#+POSTID: 1005
+#emacser#+POSTID: 41831
+#fangzhzh.info#+POSTID: 996
+#+(setq time-stamp-line-limit -8)
+#+SETUPFILE: ~/.emacs.d/plugins/org-template.org
+#+TITLE: evernote-mode
+#+OPTIONS: nil
+#+PERMLINK: evernote-mode
+#+TAGS:evernote,emacs,evernote-mode,onenote,notetaking
+#+CTEGORY: emacs
+#+DATE:2011-04-25 20:32:14
+
+#+BEGIN_EXample
+  曾经有一段信息摆到我眼前,可是我没有珍惜.直到失去我才后悔莫及.
+  如果上天能给我一个重来的机会,我希望将那段信息记为笔记,如果非要在这条笔记上加个期限,我希望是一万年.
+#+END_Example
+
+我这人向来不喜欢凑热闹,大家都喜欢的姑娘我从来都不会去追,大家都说好的电影我从来不去看,按现在流行语说,就是zhuangbility. 哈哈. 但是,最近很火[fn:hotevernote]的{{{EVERNOTE}}},我确实很是喜爱,忍不住也来说分享一下自己使用{{{EVERNOTE}}}的经验.
+
+本文会先介绍{{{EVERNOTE}}}是什么,{{{EVERNOTE}}}与其它主流笔记软件的比较并说明其优点,然后讨论一些记录{{{EVERNOTE}}}笔记的方法,然后介绍将{{{EVERNOTE}}}和{{{EMACS}}}两大神器结合起来的方法,最后介绍{{{EVERNOTE}}}强大的搜索功能.
+
+#+BEGIN_HTML
+<!--more-->
+#+END_HTML
+** {{{EVERNOTE}}}
+*** {{{EVERNOTE}}}是什么
+    {{{EVERNOTE}}}是一套用来记笔记和查询笔记的软件和服务.{{{EVERNOTE}}}中的笔记可以是一段文字,一个网页或网页片断,一幅图片,声音,或者手绘墨迹,而且笔记可以有PDF之类的附件. 已有笔记可以支持以下搜索方式:文件夹,标签,是否有附件,是否有图片,是否email发送,是否是todo,据说,搜索还可以支持搜索图片内的文字. 可谓,功能强大,同时,方便易用,实乃是居家旅行,看书学习必备之工具.
+
+    {{{EVERNOTE}}}有免费版和专业版.{{{EVERNOTE}}}免费版每个月提供60M上传流量(即上传的笔记总大小不能超过60M),如果需要更多上传流量可以考虑付费版.不过就我个人经验,对于普通用户来说,60M的流量,内容大都为纯文字和图片的话,足足够用.此外,我认为笔记的内容最好只有文字和图片,不要使用doc和pdf之类的附件:第一,{{{EVERNOTE}}}比较强大的搜索功能对此类附件无效,使用附件的话既浪费了{{{EVERNOTE}}}最强大的搜索功能,又占据了大部分的上传流量,所以如果这些文档比较多,我建议此类附件还是放到{{{DROPBOX}}}或者{{{SUGARSYNC}}};第二个,也是更重要的不要使用附件的原因就是云存储,具体见下节.
+
+*** 为什么选择{{{EVERNOTE}}}
+    为什么{{{EVERNOTE}}}是优秀的?首先,我们先看一组数据[fn:notetaking-software-comparison].下表是笔记相关的软件们特性的对比.
+    
+| 名称                      | 遵循协议                                                                  | 平台                                                                                                                               | 同步                                                                        | 键盘输入                     | 支持笔和电子墨迹                                                                    | 打印              | 格式                                                                                                                                                            | 备注                                                                                                                                                                                                                                                                                                                                                                                                      |
+|---------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------+------------------------------+-------------------------------------------------------------------------------------+-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 纸笔                      | 无                                                                        | 纸笔,人肉记录                                                                                                                     | 人肉                                                                        | 人肉输入                     | 无                                                                                  | 无                | 纸张                                                                                                                                                            | 现在使用最多的笔记记录方式.主要缺点是:记录不太方便(需随时携带纸笔),笔记容易丢,查询不方便.                                                                                                                                                                                                                                                                                                                 |
+| A.nnotate                 | 免费和收费版本                                                            | Web-based                                                                                                                          | ?                                                                           | Yes                          | ?                                                                                   | Yes               | PDF, .doc, .docx, images, web pages                                                                                                                             | Mostly oriented to including comments in PDF and Microsoft Word documents.                                                                                                                                                                                                                                                                                                                                |
+| Adobe Reader              | Freeware, but needs Acrobat Professional (~600€) for enabling annotations | Linux, Windows, and Mac OS X                                                                                                       | ?                                                                           | Yes                          | Yes, but requires AutoInk plugin to get smooth ink                                  | Yes               | PDF, with proprietary extension                                                                                                                                 |                                                                                                                                                                                                                                                                                                                                                                                                           |
+| AllMyNotes Organizer      | 免费和收费版本                                                            | Windows 2000/XP/Vista/Windows 7                                                                                                    | ?                                                                           | Yes                          | No                                                                                  | Yes               | Proprietary, encrypted. Supports import from plain text, RTF, images. Exports to plain text, html, rtf.                                                         | Access restriction by password, alarms, tasks, icons, rich text, file attachemnts, outlining, portable, skins, multilingual, autobackup, capture text via tray icon, spell checker, auto-backups (history).                                                                                                                                                                                               |
+| BasKet Note Pads          | GPL                                                                       | Linux                                                                                                                              | No                                                                          | Yes                          | No                                                                                  | No                | Rich text (export as HTML)                                                                                                                                      | Features adding, managing notes by category, importing text files, images, sounds, autosave.                                                                                                                                                                                                                                                                                                              |
+| Bluebeam PDF Revu         | proprietary (专利)                                                        | Windows XP, Windows Vista                                                                                                          | ?                                                                           | Yes                          | Yes                                                                                 | Yes               | save as PDF, export as BMP, PNG, JPEG, GIF, TIFF, plain text                                                                                                    | tabbed interface, pressure sensitive ink, auto recognize text in ink which is searchable, includes PDF printer, spell check                                                                                                                                                                                                                                                                               |
+| DéjàClick               | 专利                                                                      | Linux, Unix, Windows, and Mac OS X                                                                                                 | ?                                                                           | Yes                          | ?                                                                                   | Yes               | XML                                                                                                                                                             | Features ability to annotate live web pages via DéjàNotes and share scripts. Notes may include rich text or HTML and can be printed and saved as a normal web page via the Firefox browser.                                                                                                                                                                                                             |
+| emacs org-mode            | GPL                                                                       | Linux, Windows, Mac OS X, Unix                                                                                                     | Yes, third party programs for Android and Iphone, other via version control | Yes                          | No                             <                                                    | Yes               | LaTeX, HTML, DocBook, Taskjuggler, PDF, Freemind, XOXO, iCalendar                                                                                               | org-mode is a major mode of Emacs, fully customisable, use only plain-text, includes ToDos, spreadsheet, deadlines, encryption, reminders, agenda, calendar and many more                                                                                                                                                                                                                                 |
+| eNoteFile                 | Free trial and paid subscription                                          | Windows XP/Vista/Windows 7                                                                                                         | Yes                                                                         | Yes                          | Yes                                                                                 | Yes               | One-click synchronisation, sharing, password protection, automatic backup, remote access, on/offline functionality, superfast filing system, visual/area search |                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Evernote                  | Freeware and paid versions                                                | Android, Mac OS X, iPhone OS, Windows XP, Windows Vista, Windows 7, Windows Mobile, Palm Pre, IMAP (read-only), WWW.               | Yes                                                                         | Yes                          | Maybe. No support for ink notes in Mac desktop version. You can't mix ink with text | Yes               | Notes stored as XML. Free version can import & display HTML, PDF, JPG, WAV, PNG, MP3, GIF, AMR. Paid version can attach any filetype.                           | Supports many different platforms.                                                                                                                                                                                                                                                                                                                                                                        |
+| Exstora organiser         | Freeware and paid versions                                                | Windows 2000 - Vista                                                                                                               | ?                                                                           | Yes                          | ?                                                                                   | yes (Pro version) | Plain text                                                                                                                                                      | Features adding, managing notes by category, importing text files, etc.                                                                                                                                                                                                                                                                                                                                   |
+| FileIt.in                 | Free advertisement based                                                  | Web-based                                                                                                                          | No                                                                          | Yes                          | No                                                                                  | Yes               | Html                                                                                                                                                            | Syntax is MediaWiki based. Notes can be downloaded in a compressed file (zip) in wiki and html format (atom), but not in txt                                                                                                                                                                                                                                                                              |
+| Gnote                     | GPL 3                                                                     | Linux                                                                                                                              | Yes                                                                         | Yes                          | ?                                                                                   | Yes               | NoteXmlFormat, HTML, PDF                                                                                                                                        | Port of Tomboy to C++, wiki-style linked notes                                                                                                                                                                                                                                                                                                                                                            |
+| Google Notebook           | web service                                                               | Web-based                                                                                                                          | ?                                                                           | Yes                          | ?                                                                                   | Yes               | Web-based; export to ODF, Microsoft Word, PDF etc. via Google Docs                                                                                              | no longer maintained                                                                                                                                                                                                                                                                                                                                                                                      |
+| Gournal                   | GPL                                                                       | Linux                                                                                                                              | ?                                                                           | Yes                          | Yes                                                                                 | Yes               | SVG                                                                                                                                                             |                                                                                                                                                                                                                                                                                                                                                                                                           |
+| iAnnotate PDF             | 专利                                                                      | iPad, iPod, iPhone                                                                                                                 | Yes                                                                         | Yes                          | Yes                                                                                 | Yes               | PDF                                                                                                                                                             | email annotation summary, sync to Dropbox, or sync with computer via iTunes or free application. iPhone/iPod version is called "Aji Annotate".                                                                                                                                                                                                                                                            |
+| Idea Rover                | Free trial                                                                | Windows                                                                                                                            | ?                                                                           | Yes                          | ?                                                                                   | Yes               | Import HTM, HTML, PDF, and TXT, export to RTF, DOC                                                                                                              | Automatically retrieves information from HTM, HTML, PDF, and TXT files, exports footnotes to Microsoft Office Word 2003/ 2007, integrates with IE and Firefox.                                                                                                                                                                                                                                            |
+| Jarnal                    | GPL                                                                       | Any Java capable platform, including Linux, Windows, and Mac OS X                                                                  | ?                                                                           | Yes                          | Yes, but no pressure sensitivity                                                    | Yes               | ad-hoc (zip compatible archive containing an SVG per page, a config file, optional background PDFs/images). Can export to txt, html, jpg, pdf.                  | Requires Java                                                                                                                                                                                                                                                                                                                                                                                             |
+| KNote                     | Freeware                                                                  | Windows                                                                                                                            | Yes, with external tools                                                    | Yes                          | No                                                                                  | Yes               | xml, can attach any files/folders. Support import from tiddlywiki and copy/paste with formats from browsers and Microsoft Word                                  | bank-grade encryption/password protection, one-click blogging, wiki links, WYSIWYG editor, portable, no installations are required.                                                                                                                                                                                                                                                                       |
+| Knowledge NoteBook        | 30 day trial and commercial.                                              | Window XP / Vista / 7                                                                                                              | ?                                                                           | Yes                          | ?                                                                                   | Yes               | Text, image, pdf or other multimedia file                                                                                                                       | Knowledge Capture, Organization and Comprehension. Ideal users include college and high school students.                                                                                                                                                                                                                                                                                                  |
+| KeepNote                  | GPL                                                                       | Windows, Linux, Mac OS X                                                                                                           | ?                                                                           | Yes                          | ?                                                                                   | Yes               | XHTML, XML, PNG, JPG, GIF                                                                                                                                       |                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Linked Notes Basic        | Freeware                                                                  | Windows XP, Windows Vista                                                                                                          | ?                                                                           | Yes                          | ?                                                                                   | Yes               | proprietay, Export as RTF and TXT                                                                                                                               | Enter, organise and format notes (rich text) in tree structure. Links between pages and with web pages are automatic. Encryption and full text searching available.                                                                                                                                                                                                                                       |
+| MagicView                 | 专利                                                                      | Windows                                                                                                                            | Yes                                                                         | Yes                          | ?                                                                                   | Yes               | HTML, RTF, TXT, HTA, XHTML, XML, PNG, JPG, GIF, BMP, MHT, PDF, DjVu (Export to HTML, Import Microsoft Word (DOC))                                               | Enter, organise and format clips (web, screen, MS Word, Excel, others) & notes (rich text/html) in technical outline with complex tags (including date assignments) and concurrent context views. Outlines & RTF/HTML notes can be shared by online networking or offline sync.                                                                                                                           |
+| Microsoft Windows Journal | 专利                                                                      | Windows XP Tablet PC edition                                                                                                       | ?                                                                           | Yes                          | Yes                                                                                 | Yes               | proprietary                                                                                                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Microsoft Office OneNote  | 专利                                                                      | Windows XP, Windows Vista, Windows 7, Windows Phone 7, Windows Mobile, web; OneNote syncs with iPhone and iPad through MobileNoter | Yes                                                                         | Yes                          | Yes                                                                                 | Yes               | proprietary                                                                                                                                                     | Supports audio and video-recording, screen clipping, importing from Web pages, and drawing; import from any Windows application by means of a simulated printer. Good integration with other applications from vendor's Office suite. Tabbed interface provides good features for organizing and re-organizing pages. When used with Tablet PC ink, can search ink for text across all notes or a subset. |
+| MyNotex                   | GPL                                                                       | Linux                                                                                                                              | Yes                                                                         | Yes                          | No                                                                                  | No                | Sqlite based, zipped attachments, export to HTML                                                                                                                | Features text formatting, file attachments, tagging, searching, notes management by subject, encryption with AES algorithm, text files and OpenOffice.org documents import. Multilingual.                                                                                                                                                                                                                 |
+| My Yellow Notepad         | 专利                                                                      | Windows                                                                                                                            | ?                                                                           | Yes                          | ?                                                                                   | Yes               | XML, proprietary compressed                                                                                                                                     | Enter, organise and format notes (rich text) in tree structure (with clones), includes standalone viewer, 30-day demo available                                                                                                                                                                                                                                                                           |
+| Circus Ponies NoteBook    | 专利                                                                      | Mac OS X                                                                                                                           | ?                                                                           | Yes                          | Yes                                                                                 | Yes               | proprietary, export: html, opml, rtf, txt, doc, pdf                                                                                                             | Features adding, managing note entries, outlining, tabs, tagging, automatic indexing, audio recording, screen clipping, importing files (text, audio & video), link or embed files, etc.                                                                                                                                                                                                                  |
+| NoteCase Pro              | 免费和收费版本                                                            | Cross-platform                                                                                                                     | Yes                                                                         | Yes                          | No                                                                                  | Yes               | Html and Sqlite based                                                                                                                                           | Features rich text formatting, spellchecker, attachments, tagging, tasks, Lua scripting, printing etc. Built for big number of platforms including Windows, Linux, OS X, Nokia Maemo, Solaris, FreeBSD.                                                                                                                                                                                                   |
+| NoteLab                   | GPL                                                                       | Linux, Windows, and Mac OS X                                                                                                       | ?                                                                           | ?                            | ?                                                                                   | Yes               | save as SVG, export to many including PNG, JPG, BMP                                                                                                             |                                                                                                                                                                                                                                                                                                                                                                                                           |
+| NotePub                   | Free web service                                                          | Web-based                                                                                                                          | ?                                                                           | Yes                          | ?                                                                                   | Yes               | Web-based, HTML                                                                                                                                                 | Supports privacy settings on a note by note basis, real time search of public and private notes, note to note links and back-links, drag and drop of images and files from web sites and from the desktop.                                                                                                                                                                                                |
+| NoteScribe                | 专利                                                                      | Windows                                                                                                                            | ?                                                                           | Yes                          | ?                                                                                   | Yes               | save as .NSE (NoteScribe), export to .rtf                                                                                                                       | supports image, video, text, PDF, spreadsheet attachments, generate citations and bibliographies                                                                                                                                                                                                                                                                                                          |
+| Okular                    | GPL                                                                       | Linux/Unix                                                                                                                         | No                                                                          | Yes                          | No                                                                                  | Yes               | PDF, PS, TIFF, CHM, DjVu, DVI, XPS, ODF, various others                                                                                                         | Can export PDF + notes, for sending to other Okular users                                                                                                                                                                                                                                                                                                                                                 |
+| PDF Annotator             | 专利, base licence for 50$                                                | Windows                                                                                                                            | ?                                                                           | Yes                          | Yes                                                                                 | Yes               | save as pdf only, no export function (supports vector-graphical annotating internally only)                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                           |
+| PDF Studio                | 专利                                                                      | Windows, Linux, Mac OS X. Also available web-based.                                                                                | ?                                                                           | Yes                          | ?                                                                                   | Yes               | PDF                                                                                                                                                             | Review and markup PDF documents.                                                                                                                                                                                                                                                                                                                                                                          |
+| Personal Knowbase         | 专利                                                                      | Windows                                                                                                                            | ?                                                                           | Yes                          | ?                                                                                   | Yes               | export to RTF, HTML, TXT, CSV                                                                                                                                   | Supports tags, hypertext, attachments, passwords. Portable.                                                                                                                                                                                                                                                                                                                                               |
+| RightNote                 | 专利 (with free trial)                                                    | Windows (2K/XP/2K3/Vista)                                                                                                          | No                                                                          | Yes                          | ?                                                                                   | Yes               | Proprietary (sqlite); import and export of txt, csv, html (webclips) & xls                                                                                      | Tabbed interface, outline tree interface, multiple pages, fast search, tagging, attachments and hyperlinks, portable (can run from USB stick or Dropbox[citation needed])                                                                                                                                                                                                                                 |
+| Springnote                | web service                                                               | Web-based                                                                                                                          | ?                                                                           | Yes                          | ?                                                                                   | Yes               | Web-based; import Microsoft Word (DOC), OpenDocument text (ODT), Text files (TXT), HTML, and Hangul Word Processor (HWP) files,; export to blog.                | supports image, video, text, file attachments, keyboard shortcuts, wiki markups, etc.                                                                                                                                                                                                                                                                                                                     |
+| Swarm Doc                 | Web-Based, GPL                                                            | Web-Based, Linux, Windows, Mac OSX                                                                                                 | Yes                                                                         | Yes                          | ?                                                                                   | Yes               | Web-based; Html, wiki, local storage in sqlite database                                                                                                         | Wiki based note taking software on the desktop uses Adobe Air application and synchronises with notoair.com                                                                                                                                                                                                                                                                                               |
+| threetags.com             | web service                                                               | Web-based, iPhone app                                                                                                              | Yes                                                                         | Yes                          | ?                                                                                   | Yes               | HTML                                                                                                                                                            | Notes are stored encrypted for extra security/privacy                                                                                                                                                                                                                                                                                                                                                     |
+| TiddlyWeb                 | BSD                                                                       | cross-platform (Python / web-based)                                                                                                | Yes                                                                         | Yes                          | ?                                                                                   | Yes               | TiddlyWiki, HTML, TXT, JSON etc.                                                                                                                                | extensible via plugins                                                                                                                                                                                                                                                                                                                                                                                    |
+| TiddlyWiki                | BSD                                                                       | cross-platform (browser-/web-based)                                                                                                | Yes                                                                         | Yes                          | ?                                                                                   | Yes               | HTML                                                                                                                                                            | extensible via plugins and user scripts                                                                                                                                                                                                                                                                                                                                                                   |
+| Tomboy                    | LGPL                                                                      | cross-platform                                                                                                                     | Yes                                                                         | Yes                          | ?                                                                                   | Yes               | NoteXmlFormat, HTML, PDF, wiki-formats                                                                                                                          | Reminders, todo-lists, formulae in LaTeX                                                                                                                                                                                                                                                                                                                                                                  |
+| TreeDBNotes               | shareware & freeware                                                      | Windows                                                                                                                            | ?                                                                           | Yes                          | ?                                                                                   | Yes               | save as .treedb export as html, doc, txt, rtf, rvf.                                                                                                             | save notes in tree structure support formatted text, table, image, hyperlink                                                                                                                                                                                                                                                                                                                              |
+| WhizFolders               | 专利                                                                      | Windows                                                                                                                            | No                                                                          | Yes                          | No                                                                                  | Yes               | Database, proprietary compressed                                                                                                                                | Can merge notes to RTF, HTML. Is also an outliner.                                                                                                                                                                                                                                                                                                                                                        |
+| Typhoeus Stickies         | Free                                                                      | Windows XP, Vista and 7                                                                                                            | ?                                                                           | Yes                          | No                                                                                  | Yes               | .RTF and .TXT                                                                                                                                                   | All in one note taking software with backups and other cool features!                                                                                                                                                                                                                                                                                                                                     |
+| xl Notes                  | 免费和收费版本                                                            | Windows                                                                                                                            | ?                                                                           | Yes                          | ?                                                                                   | Yes               | xls, xlsx formats                                                                                                                                               | notetaking add-in for Microsoft Excel                                                                                                                                                                                                                                                                                                                                                                     |
+| Xournal                   | GPL                                                                       | Linux, Windows                                                                                                                     | ?                                                                           | yes (recent versions)        | Yes                                                                                 | Yes               | XML, export to PDF                                                                                                                                              | Fast boot, smooth curves                                                                                                                                                                                                                                                                                                                                                                                  |
+| Zim                       | Artistic, GPL                                                             | Linux, Windows                                                                                                                     | ?                                                                           | Yes                          | ?                                                                                   | Yes               | wiki-format, export to HTML and Txt2Tags                                                                                                                        | Perl based, wiki markup, outlining, forumlae                                                                                                                                                                                                                                                                                                                                                              |
+|---------------------------+---------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------+------------------------------+-------------------------------------------------------------------------------------+-------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Name                      | Licence                                                                   | Platforms                                                                                                                          | Synchronisation                                                             | Enter text with the keyboard | Write notes with pen and ink                                                        | Printing          | Formats                                                                                                                                                         | Remarks                                                                                                                                                                                                                                                                                                                                                                                                   |
+
+    下面根据数据来说明为什么应该选用{{{EVERNOTE}}}：
+
+    第一,{{{EVERNOTE}}}有免费版本,免费,功能受限,但是是足够用. 附合it just works原则.
+
+    第二,跨平台绝对给力,秒杀所有同类软件.大部份同类软件能够支持到linux,mac,windows三个已经能够给人惊喜了,{{{EVERNOTE}}}呢,支持的平台包括：Android, Mac OS X, iPhone OS, Windows XP, Windows Vista, Windows 7, Windows Mobile, Palm Pre, IMAP (read-only), WWW,这意味着什么：首先,{{{EVERNOTE}}}的笔记才是真正的 [[http://en.wikipedia.org/wiki/Write_once,_run_anywhere][write once,run everwhere]],身为一个程序猿,对这种特性简直爱到死;其次,{{{EVERNOTE}}}彻底重新定义了记笔记这个活动：纸笔,电脑,几乎所有智能手机：iphone,windows mobile, palm, android,都有客户端,feature phone只要支持imap的mail客户端,或者拥有一个浏览器,就都可以完成记笔记这个行为.移动设备,可以让记笔记无处不在.
+
+    第三,支持的笔记类型：键盘输入,语音输入,照片,手写的电子墨迹,等等,从此笔记不再是冷电脑前,书前冷冰冰的文字知识,而可以是任意的领悟,待办事项,绝妙主意,路过的一个美女(是的,支持照片),帐本,钱的花销,记录时间花销,等等.{{{EVERNOTE}}}让记笔记成为了艺术.
+
+    第四,强大的搜索功能[fn:evernoteSearch]：{{{EVERNOTE}}}的搜索按照关键字搜索文本,标题,图片中文字内容,等等,关键字支持正则表达式.但是,这并不是{{{EVERNOTE}}}搜索的全部,{{{EVERNOTE}}}的搜索强大还在于其支持以下搜索标准：tag,创建日期,修改日期,是否有附件,是否发自email,notebook,作者,经度,纬度,todo.笔记不但找得到,而且找的准.
+
+    简要说明了{{{EVERNOTE}}}的强大,下面来介绍什么时候应该使用{{{EVERNOTE}}}和如何使用{{{EVERNOTE}}}来记笔记.
+** {{{EVERNOTE}}}记笔记的一些方法
+   
+*** 读书笔记 - Kindle + twitter + evernote
+    对于传统的读书笔记,一般是发生在看书时,而现在更多的发生在电脑旁,下面我们介绍下读书笔记和{{{EVERNOTE}}}结合的方法.
+
+- 看书时
+
+  对于传统纸书,一般还是记在纸上,然后输入电脑,或者就在笔记本上.可惜,这种纸质方法记下的笔记有两个很严重的问题：书和笔记本的存放,书籍,纸质笔记本的丢失是经常发生的事情;二,笔记的搜索：好像读过某本书,记过什么想法,但是需要的时候,翻遍所有笔记本偏偏找不到更是经常遇到的情况.
+
+  所以,读书我推荐{{{KINDLE}}}[fn:book4Kindle],{{{KINDLE}}}可以完美克服这两个缺点：便携,{{{KINDLE}}}6寸屏幕,可以放到一般衣服的兜里:易搜索,将{{{KINDLE}}}和{{{EVERNOTE}}}进行绑定,将{{{KINDLE}}}记录下的读书笔记交给{{{EVERNOTE}}}来保存,得以充分利用{{{EVERNOTE}}}的强大搜索功能,LOL～～～～.绑定方法是{{{KINDLE}}}绑定{{{twitter}}},{{{twitter}}}绑定{{{EVERNOTE}}}:  (kindle+twit)+(twit+evernote)=kindle -> evernote,具体方法见 http://blog.evernote.com/2009/04/14/evernote_twitter/.
+
+  绑定后,在{{{KINDLE}}}上记笔记时,使用以下语法,即可将笔记传送到{{{EVERNOTE}}}数据库中,下面是我建议的一种记笔记的方式：
+
+  @myen 110122  my kindle example notes for {{{EVERNOTE}}} #aat.
+
+  @myen是evernote的{{{TWITTER}}}帐号,在绑定{{{TWITTER}}}和{{{EVERNOTE}}}后,所有@myen的内容都会记录到你的{{{EVERNOTE}}}数据库,100122是记笔记的日期,供日后查询用,my kindle example notes for {{{EVERNOTE}}}是笔记内容,#notes是标签,标记了是看哪本书,也是为了查询时能够单独查询出看某一本书时的笔记,比如我现在看的一本书是<American Accent Trainning>[fn:aat],我给所有这本书的笔记用的标签#aat,这个标签起名全在个人品味,只要保持前后一致,并且好记即可.
+
+- 电脑旁
+
+  电脑旁看书的话,Windows和Mac有相应的Evernote版本,Linux有一个移植Nevernote[fn:nevernote],客户端功能强大,使用方法可以参考[fn:hotevernote]中各种介绍.
+
+*** 浏览网页,保存雄文 -- evernote for firefox and chrome
+
+    浏览网页时,难免会有些雄文,看过一遍不爽,于是会想保存下来日后阅读.一般可以选择保存为google bookmark, google reader中共享, google reader中标记星号.
+
+    那么{{{EVERNOTE}}}提供一种新的,我认为更好的方法,将雄文保存为自己的笔记.毕竟内容再好,网上的内容属于网上的,即使在google reader中标记为了星号,google reader上从来没有下1000的未阅读也会让阅读星号文章成为一种美好的愿望.但是,保存为笔记,闲暇时分,自然而然的打开evernote,看一下tag为todo,同时tag为algortithm的文章,那是多么的惬意.笔记,随着时时温习让知识纳入自己的知识网络那才是王道.
+    
+    {{{EVERNOTE}}}提供{{{FIREFOX}}}和{{{CHROME}}}两个浏览器的插件[fn:evernote4firefoxandchrome],如果是安装了Windows的客户端,默认的会在IE上安装{{{EVERNOTE}}}插件.插件的作用是抓取网页内容,简单易用,功能强大,谁用谁知道.
+  
+*** 时间,任务管理,想法,绝妙主意: email + mobile phone 客户端
+
+    记得当时听李敖讲当年刚上大学军训的时候,用塑料布将笔和笔记本绑到腰上,有什么想法赶紧用纸笔记下来,塑料布绑着也不怕笔记本被汗水浸湿.
+
+    二十一世纪的我们,如果再有如此强大的求知欲,需要记笔记时当然不再用如此虐待自己了.手机,社会人的标配,在借助了{{{EVERNOTE}}}的东风后,也能够在加强沟通以外的领域开花结果.
+
+    {{{EVERNOTE}}}提供以下平台的客户端,iPhone / iPod Touch,iPad, Android, BlackBerry, Palm Pre / Palm Pixi, Windows Mobile, 下载地址：    http://www.evernote.com/about/download/?btn=grey.
+
+    如果手机不是以上几种,不是智能手机,也没有问题,只要支持email,通过email记笔记也很是方便,方法见： http://blog.evernote.com/2010/03/16/emailing-into-evernote-just-got-better/.
+
+    好吧,如果手机连email都不支持,最后的办法就是web.现在的feture phone全部都支持java,安装一个opera,用opera访问{{{EVERNOTE}}}的主页,在其主页上进行记笔记的操作即可.只是,如果记笔记需要如此繁琐的步骤：1.打开浏览器,2.登陆{{{EVERNOTE}}}主页,3.新建,4.写内容,5.提交,6,记笔记完成.这繁琐的步骤让手机失去了记笔记的方便快捷性,那么失去了快捷性的手机记笔记也就没有必要了.这种情况下,使用纸笔也许是更好的方法.
+
+    如果你是一位潮人,果粉,那么恭喜,苹果的所有产品都有相应的app,而且据说是最好用的{{{EVERNOTE}}}app,羡慕妒嫉啊.
+    
+** evernote-mode
+   作为一个emacser,总是会有一种狂热,那就是看到任何好软件,都会下意识的去问,这个功能emacs中能有吗？对于{{{EVERNOTE}}},答案是也是YES.
+
+   emacs中evernote的名字叫evernote-你懂的-mode,项目地址：http://code.google.com/p/emacs-evernote-mode/. evernote-mode是用ruby写的,截止2011.4.14,最新的版本是0.30.
+
+   evernote-mode的功能包括：打开笔记,创建笔记,支持对已有笔记的内容、标题、标签的修改,支持为{{{EMACS}}}中选中区域内容创建笔记,搜索笔记.最新版的支持本地的笔记内容Cache,读写笔记和标签速度比当时我用的0.10版本变快了不少.
+
+   下面简要介绍下evernote-mode的安装,设置,使用流程.
+   
+*** evernote-mode的安装
+
+- download代码到本地
+
+  svn checkout http://emacs-evernote-mode.googlecode.com/svn/trunk/ emacs-evernote-mode-read-only
+  
+- 安装ruby脚本
+
+#+BEGIN_SRC bash
+    cd evernote-mode/ruby
+    ruby setup.rb
+#+END_SRC
+
+- 将evernote-mode.el加入到load path
+
+- 为evernote-enml-formatter-command 安装w3m（可选）
+  如果你的linux/Unix用户,从这里取[[http://w3m.sourceforge.net/index.en.html][w3m]] 或者使用你发行版的包管理工具安装;如果你是Windows用户,安装[[http://www.cygwin.com/][cygwin]]并在安装过程中选中w3m包.
+
+- 将evernote-mode的配置文件加入.emacs
+#+BEGIN_SRC elisp
+  (setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8")) ; option
+  (add-to-list 'load-path "<your load path>")
+  (require 'evernote-mode)
+  (global-set-key "\C-cec" 'evernote-create-note)
+  (global-set-key "\C-ceo" 'evernote-open-note)
+  (global-set-key "\C-ces" 'evernote-search-notes)
+  (global-set-key "\C-ceS" 'evernote-do-saved-search)
+  (global-set-key "\C-cew" 'evernote-write-note)
+  (global-set-key "\C-cep" 'evernote-post-region)
+  (global-set-key "\C-ceb" 'evernote-browser)
+#+END_SRC
+
+    如果使用cygwin来安装的ruby的话,需要cygwin-mount.el(http://www.emacswiki.org/cgi-bin/wiki/cygwin-mount.el).
+
+    将cygwin-mount.el放至load path中,并在.emacs中加入以下代码
+    
+#+BEGIN_SRC elisp
+    (require 'cygwin-mount)
+    (cygwin-mount-activate)
+#+END_SRC
+
+    安装完毕.
+  
+
+*** evernote-mode的使用
+    简要介绍evernote-mode提供的命令和功能.
+
+    | 命令                                 | 说明                                                 |
+    |--------------------------------------+------------------------------------------------------|
+    | evernote-open-note                   | 在Emacs的一个Buffer中打开一个已存在的笔记            |
+    | evernote-save-note(\C-x\C-s)         | 保存修改过的笔记                                     |
+    | evernote-create-note                 | 创建一个笔记                                         |
+    | evernote-write-note                  | 从当前buffer创建新笔记                               |
+    | evernote-post-region                 | 使用当前选中的区域的内容创建笔记                     |
+    | evernote-edit-tags(\C-cet)           | 修改当前笔记的标签                                   |
+    | evernote-change-edit-mode(\C-cee)    | 改变编辑模式 (TEXT,XHTML可选)                        |
+    | evernote-rename-note(\C-cer)         | 重命名当前笔记                                       |
+    | evernote-delete-note (\C-ced)        | 删除当前笔记                                         |
+    | evernote-search-notes                | 搜索                                                 |
+    | evernote-do-saved-search             | 使用已保存的搜索条件进行笔记搜索                     |
+    | evernote-create-search               | 为一个搜索分配一个名字,以备后用                     |
+    | evernote-edit-search                 | 编辑已保存搜索的搜索条件                             |
+    | evernote-toggle-read-only (\C-x\C-q) | 设置笔记的只读属性                                   |
+    | evernote-enml-formatter-command      | 格式化XHTML笔记                                      |
+    | evernote-browser                     | 打开evernote-browser,evernote browser提供强大的功能 |
+
+- everntoe-broswer
+
+  Evernote Browser可以打开以下四种页面：标签列表页面,已保存搜索列表页面,笔记列表页面,笔记本列表页面.
+
+  标签列表页面以层次图的形式列出Evernote服务中的标签列表,在标签名字上\C-m会打开符合此tag的笔记列表页.
+
+  已保存搜索是在Evernote中已创建的一系列搜索条件,在某个搜索上按键\C-m会打开符合相应的搜索结果的笔记.
+
+  笔记列表页面,符合某个搜索条件的笔记.
+
+  笔记本列表页面是Evernote上创建的所有笔记本的列表.
+
+  下表是所有在Evernote Browser上可用的其它键命令.
+
+  | 按键 | 动作                                                        |
+  |------+-------------------------------------------------------------|
+  | b    | 移动到前一页                                                |
+  | f    | 移动到后一页                                                |
+  | t    | 创建一个标签列表页面并显示.如果已存在标签页面,直接将其打开. |
+  | S    | 创建一个搜索列表页面并显示.如果已存在,将其打开.             |
+  | s    | 输入搜索条件,并显示符合搜索结果的笔记列表.                  |
+  | N    | 创建一个笔记本列表页面.如果笔记本列表已经存在,将其打开.     |
+  | o    | 等同\C-m,但是光标并不移动到打开的笔记buffer.                |
+  | n    | 如果在笔记列表,打开当前笔记,并移动到下一行.                 |
+  | p    | 如果在笔记列表,打开当前笔记,并移动到前一行                  |
+  | d    | 从Evernote Browser删除当前页面.                             |
+  
+  
+** org-mode + evernote-mode
+
+   因为我现在正在使用org-mode+remember来记笔记,org+remember的快捷和org-mode的显示都给我带来很好的使用体验.
+
+   org-mode的搜索功能比较不给力,那么是否可以将具有强大的搜索功能的{{{EVERNOTE}}}结合进来,使org-mode+remember+evernote-mode组成完美笔记三剑客呢？好吧,此处的答案仍然是YES.
+
+   下面是我的解决方案.
+
+#+BEGIN_SRC elisp
+;;+evernote-mode+org-mode
+;;基本想法是：在org-remember完成时,调用一函数来处理此remember的内容,将此内容转化为一个evernote的笔记.
+
+;;添加处理函数到rememer的hook
+(add-hook 'org-remember-before-finalize-hook 'evernote-this-org-note)
+
+;;当调用到hook时,调用此函数,处理remember的内容,
+(defun evernote-this-org-note(&optional arg)
+  "select note"
+  (interactive "P")
+  (beginning-of-buffer)
+  (re-search-forward "^\*.*")
+  (backward-word 1)
+  (beginning-of-line )
+  (copy-line)
+  (forward-line)
+  (evernote-post-region-4-org-mode (point) (point-max) "test")
+)
+
+;;此函数将remember的内容做为evernote笔记内容,标题的remember是标题,同时,会在minibuffer中询问tag,tag以“,”间隔
+(defun evernote-post-region-4-org-mode (begin end arg)
+  "Post the region as a note"
+  (interactive "r\np")
+  (enh-command-with-auth
+   (save-excursion
+     (save-restriction
+       (narrow-to-region begin end)
+       (if (and (enutil-neq arg nil) (enutil-neq arg 1))
+           
+;           (pop-to-buffer (enh-base-create-note-common (buffer-name) t t t))
+         (enh-base-create-note-common (current-kill 0) nil nil t))))))
+
+#+END_SRC
+
+#+BEGIN_DOT evernote-org-overview.png -Tpng 
+digraph G{
+  "org-remember" -> "edit notes contents" -> "\\c \\c to finish" -> "query tag, title, evernote mode" -> "DONE";
+}         ;
+#+END_DOT
+   
+** {{{EVERNOTE}}}搜索的一些例子
+
+   evernote的搜索功能相当强大：搜索条件多样,而且速度相当快.
+
+   可以做为搜索条件的有：笔记本,任意表达式,标签,标题,创建日期,包含音频,包含图片,作者,创建笔记时的经纬度,笔记来源...
+
+   下面给出一些例子.
+   | 例子                                       | 解释                                         |
+   | tag:todo -tag:done created:day-1           | 今天所有有有标签todo,同时没有标签done的笔记 |
+   | tag:money create:month                     | 近一个月内所有有标签money的笔记              |
+   | resource:image/*  tag:beauty               | 所有有标签beauty,同时笔记中有图片的笔记     |
+   | tag:time tag:travel                        | 所有符合有标签travel和time的笔记             |
+   | tag:english     created:day-1 -created:day | 有标签english,同时创建于昨天的不逑          |
+   | source:mail.smtp                           | 所有从邮件客户端发表的笔记                                |
+
+** 小结,缺点
+
+   {{{EVERNOTE}}}的缺点,就像它的优点一样明显,它的保存方式不是[[http://en.wikipedia.org/wiki/Plain_text][Plain text]]的,尽管{{{EVERNOTE}}}的笔记可以导出多种格式,但是因为其使用私有格式,使版本管理工具对其不同版本之间内容比较无效,也就是版本管理这种功能失去了其存在的必要性.而没有版本管理的话,一个误操作就是万劫不复啊:一旦笔记内容因某些操作全部消失,那真是辛辛苦苦好多年,一下回到解放前,
+
+   {{{EVERNOTE}}}安全问题 [[http://xbeta.info/evernote-04.htm]], {{{EVERNOTE}}}的悲惨事迹 http://blog.est.im/archives/3723, 话说,其实我也出现过数据全部丢失的状况,幸亏我{{{DROPBOX}}}备份{{{EVERNOTE}}}数据库文件夹~~~~~,所有使用{{{EVERNOTE}}}记得备份,备份,备份,人肉备份,{{{DROPBOX}}},各种方式只要是备份就行.
+
+ 
+** 形而上
+   形而上者谓之道,形而下者谓之器.我们前边说够了器,下边来说一下道:为什么记笔记?
+
+   子曾经曰过:好记性不如烂笔头.李敖童鞋在某集<李敖有话说>中曾提到过自己超变态的记笔记的行为和方法,有兴趣的可以去Google搜一下.
+
+   笑来的<把时间当作朋友>[fn:pdfmakefriendwithtime]一书中多次提到做笔记的必要性[fn:makefriendwithtime],在此推荐<把时间当作朋友>,并极力推荐书中关于<时间账本>一章.另一本书<每个人都能用英语>中,提到自己的父亲博文强记,每每引经据典,无不精确让人佩服,最后发现原来也是系统记笔记的结果.
+
+   [[http://book.douban.com/subject/4159753/][<Your brain at works>]]一书中在提到如何更好的使用大脑有限的能量时说道:努力地长时间将一个突如其来的想法或者todo事项记在大脑中非常的耗费大脑的资源,同时,干扰到大脑当前的工作状态,降低其工作效率.此时,最好的办法就是当想法突然蹦到你的脑海时,用任意方式(录音笔,纸笔,照片等等)将其快速记录下来,有时间来整理,然后马上转回到当前工作状态:此举一来记录下可能转瞬即逝的想法,二来,不打断大脑当前所处的状态,提高大脑的使用效率.
+
+   最后,推荐刘未鹏的博客<为什么你应该（从现在开始就）写博客 > http://mindhacks.cn/2009/02/15/why-you-should-start-blogging-now/, 将笔记认为是一种未发表的博客,一种发表于博客前的自我反刍.那么,除去社会性功效,此篇博客的道理都适用于记笔记的行为,也就是<为什么你应该(从现在开始就)记笔记>.
+      
+[fn:hotevernote] 各种{{{EVERNOTE}}}使用 http://linuxtoy.org/archives/%E5%85%A8%E8%83%BD%E7%9A%84%E7%AC%94%E8%AE%B0%E8%BD%AF%E4%BB%B6%E2%80%94%E2%80%94evernote-%EF%BC%8830-beta%EF%BC%89.html, http://www.biaodianfu.com/evernote.html, http://www.geekonomics10000.com/437, http://www.williamlong.info/archives/2227.html, http://xbeta.info/evernote-03.htm, http://blog.est.im/archives/3226 哈哈,一下子给出这么多链结,可见我的喜欢程度~~~LOL
+
+[fn:evernoteSearch] 搜索语法介绍 http://www.evernote.com/about/developer/api/evernote-api.htm#_Toc277181469
+[fn:aat] American Accent Trainning http://book.douban.com/subject/1755336/
+[fn:nevernote] NeverNote主页 http://nevernote.sourceforge.net/
+[fn:book4Kindle] 大部分[[http://www.douban.com/doulist/137839/][经典的计算机的著作]]基本上都有作者允许的pdf版本流传在外,google下基本可获得,将书传到{{{KINDLE}}}上阅读.
+[fn:evernote4firefoxandchrome] firefox的evernote插件 https://addons.mozilla.org/zh-CN/firefox/addon/evernote-web-clipper/ chrome的evernote插件 https://chrome.google.com/extensions/detail/pioclpoplcdbaefihamjohnefbikjilc
+[fn:notetaking-software-comparison] wordpress的模板可能无法显示完整的表格,完整,原始表格请移步 http://en.wikipedia.org/wiki/Comparison_of_notetaking_software
+[fn:pdfmakefriendwithtime] <把时间当作朋友>pdf下载地址: http://www.lixiaolai.com/index.php/archives/9456.html
+[fn:makefriendwithtime] <把时间当作朋友>中力推的记笔记工具是纸笔,但是作为一个挨踢从业者,我的经历使我更习惯电子产品,如手机,而且手机具备了<把时间当作朋友>中笑来提到的录音笔和纸笔两个功能. 工具的使用,主要关注点是舒服,哪个工具能够让你更投入到记笔记这个活动中,就应该使用哪个工具,而不要纠结于选择工具这个活动本身,更不要纠结于怎样学习适应一种别人认为好的工具.由此选用的工具一定要附合it just works原则.工具让你记笔记的行为成为一种享受,而不是痛苦.
+
+
+Time-stamp: <2011-01-20 20:32:14 fangzhzh>
+
+
+
+#+evernote-org-overview_325e28ef78b75442ab7153f530abf804991d3f8c.png http://fangzhzh.info/blog/wp-content/uploads/2011/04/wpid-evernote-org-overview_325e28ef78b75442ab7153f530abf804991d3f8c.png
+；
+
+#+evernote-org-overview_eb68418779a5bf4ae8b8573a78e2d58b7fb4583f.png http://fangzhzh.info/blog/wp-content/uploads/2011/04/wpid-evernote-org-overview_eb68418779a5bf4ae8b8573a78e2d58b7fb4583f.png
+
+#+evernote-org-overview_d8466839fb2db26b4a48e2fae4e7164dfc48dd04.png http://fangzhzh.info/blog/wp-content/uploads/2011/04/wpid-evernote-org-overview_d8466839fb2db26b4a48e2fae4e7164dfc48dd04.png

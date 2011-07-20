@@ -1,0 +1,429 @@
+# -*- org -*-
+
+# Time-stamp: <2011-06-11 15:01:20 Saturday by taoshanwen>
+
+#+OPTIONS: ^:nil author:nil timestamp:nil creator:nil
+
+使用graphviz画数据结构
+
+#+BEGIN_HTML
+<span style="color: #0000ff;">作者: </span><a href="http://blog.163.com/vic_kk/blog/static/49470524201010180715177/" target="_blank"><span style="color: #0000ff;"><b>tubo</b></span></a>
+#+END_HTML
+
+今天下午用了些时间写了个小的函数，该函数配合 autoinsert + graphviz-dot-mode ，可以很方便的将 C 语言中指定的 struct 结构画出来。这样，画了多个数据结构之后，再手动添加几条线， 数据结构之间的关系就一目了然了。
+
+#+HTML: <!--more-->
+
+** Graphviz & graphviz-dot-mode
+
+*** What is Graphviz?
+
+   简单的说， graphviz 是一个开源的自动图形绘制工具, 可以很方便的可视化结构信息，把抽象的图和网络用几何的方式表现出来。
+
+   Graphviz is open source graph visualization software. Graph visualization is a way of representing structural information as diagrams of abstract graphs and networks. It has important applications in networking, bioinformatics, software engineering, database and web design, machine learning, and in visual interfaces for other technical domains.
+
+   更多信息请参考其主页：[[http://www.graphviz.org/]]
+
+*** Graphviz 的安装
+
+   Linux 下几乎所有的发行版都有这个工具，如果没有默认安装的话，也可以通过发行版自带的软件管理工具来或者去其下载页面上下载相应的二进制包或者源码包。同时该软件也提供了 windows 下的安装文件，参见： [[http://www.graphviz.org/Download..php]]
+
+   gentoo 下安装 graphviz ， 一如既往的简单：
+   #+BEGIN_HTML
+   <pre lang="bash">
+emerge -av graphviz
+   </pre>
+   #+END_HTML
+
+*** Graphviz 的使用
+    这个话题比较大，离本文的目的有点偏，而且有网上也很多的教程，所以不多言了，可以参考这里：[[http://www.google.com/search?hl%3Den&source%3Dhp&biw%3D1278&bih%3D898&q%3Dgraphviz%2B%25E6%2595%2599%25E7%25A8%258B][http://www.google.com/search?hl=en&source=hp&biw=1278&bih=898&q=graphviz+%E6%95%99%E7%A8%8B]]
+
+*** graphviz-dot-mode
+    用过 Emacs 的人一看就知道：这肯定是为 emacs 写的、编写 dot 文件（graphviz 的输入文件）的模式，提供了文件的编译、预览、快速注释等等的相应功能。gentoo 下有现成的 ebuild ， 只要 emerge 一下就可以了：
+    #+BEGIN_HTML
+    <pre lang="c">
+emerge -av graphivz-dot-mode
+    </pre>
+    #+END_HTML
+
+    如果是其他发行版的话，从其 [[http://users.skynet.be/ppareit/projects/graphviz-dot-mode/graphviz-dot-mode.html][主页]] 上下载该文件，然后放到 emacs 的 load-path 下即可。下面是一个简单的设置：
+    #+BEGIN_HTML
+    <pre lang="lisp">
+(load "graphviz-dot-mode.el" nil t t)
+ 
+(add-hook 'find-file-hook (lambda()
+                            (if (string= "dot" (file-name-extension
+                                                buffer-file-name))
+                                (progn
+                                  (message "Enabling Setings for dot-mode")
+                                  (setq fill-column 1000)
+                                  (base-auto-pair)
+                                  (local-set-key (kbd "<C-f6>") 'compile)
+                                  )
+                              )))
+    </pre>
+    #+END_HTML
+
+    graphviz-mode 为编辑 dot 文件提供了下面的快捷键：
+
+    * *C-cc* 快速编译
+    * *C-cp* 预览图像
+    * *M-;* 注释或者取消注释
+
+** 小函数登场
+*** elisp 代码
+    主要思想是解析 buffer 中选中的文本，通过正则表达式来匹配，从中找到 struct name 以及其中的各个 fields， 最后根据 dot 语法将其组成一个 subgraph。其实应该有更好的方法（比如通过 CEDET 的 Semantic 解析结果来做），但对 CEDET 的代码实在不熟，所以现在就只能这样了。
+    代码如下：
+    #+BEGIN_HTML
+    <pre lang="lisp">
+;; Function used to add fields of struct into a dot file (for Graphviz).
+(defconst yyc/dot-head "subgraph cluster_%s {
+    node [shape=record fontsize=12 fontname=Courier style=filled];
+    color = lightgray;
+    style=filled;
+    label = \"Struct %s\";
+    edge[color=\"#2e3436\"];"
+  "Header part of dot file.")
+(defconst yyc/dot-tail "
+}"
+  "Tail part of dot")
+(defconst yyc/dot-node-head
+  "
+        node_%s[shape=record label=\"<f0>*** STRUCT %s ***|\\"
+  "Format of node.")
+(defconst yyc/dot-node-tail "
+\"];"
+  "Format of node.")
+ 
+(defconst r_attr_str "[ \t]+\\(.*+\\)[ \t]+\\(.*\\)?;"
+  "Regular expression for matching struct fields.")
+ 
+(defconst r_name "\\_<\\(typedef[ \t]+\\)?struct[ \t]+\\(.*\\)?[ \t]*{"
+  "Regular expression for mating struct name")
+ 
+(defconst attr_str "
+<f%d>%s %s\\l|\\" "nil")
+ 
+(defun yyc/datastruct-to-dot (start end)
+  "generate c++ function definition and insert it into `buffer'"
+  (interactive "rp")
+  (setq var-defination (buffer-substring-no-properties start end))
+  (let* ((tmp_str "")
+         (var-name "")
+         (var-type "")
+         (counter 0)
+         (struct-name "")
+         (header-str "")
+         )
+    (defun iter (pos)
+      (setq counter (+ counter 1))
+      (message (format "Counter: %d, pos: %d"
+                       counter pos))
+      (if (string-match r_name var-defination pos)
+          (progn
+            (message "A")
+            (setq struct-name
+                  (match-string 2 var-defination))
+            (setq header-str
+                  (format yyc/dot-head struct-name struct-name))
+            (setq tmp_str
+                  (format yyc/dot-node-head struct-name struct-name))
+            (iter (match-end 0)))
+        (if (string-match r_attr_str var-defination pos)
+            (progn
+              (message "B")
+              (setq var-type
+                    (match-string 1 var-defination))
+              (setq var-name
+                    (match-string 2 var-defination))
+              (setq tmp_str
+                    (concat tmp_str
+                            (format attr_str counter var-type var-name)))
+              (iter (match-end 0)))
+          nil)))
+    (save-excursion
+      (iter 0)
+      (set-buffer (get-buffer-create "tmp.dot"))
+      (graphviz-dot-mode)
+      (setq pos (point-max))
+      (insert  header-str tmp_str )
+      (goto-char (point-max))
+      (delete-char -1)
+      (insert "<f999>\\"yyc/dot-node-tail yyc/dot-tail)
+      )
+    (if (one-window-p)
+        (split-window-vertically))
+    (switch-to-buffer-other-window "tmp.dot")
+    (goto-char (point-min))
+    )
+  (message "Finished, please see *tmp.dot* buffer.")
+  )
+    </pre>
+    #+END_HTML
+
+*** 使用方法
+   用起来很简单：找到一个 C 代码，标记整个 struct 定义，然后M-x 输入： yyc/datastruct-to-dot 即可。命令执行完毕后，会打开一个新的 tmp.dot buffer，其中包含了用于绘制该 struct 的代码。前面也提到了，这生成的仅仅是个 subgraph，需要将这个 subgraph 添加到真正的 graph 下，才能生成图像。我通过 autoinsert 来自动创建用于放置 subgraph 的 graph 。
+
+** autoinert 配置
+   auto-insert 是 Emacs 自带的功能，稍加配置即可使用：
+   #+BEGIN_HTML
+   <pre lang="lisp">
+ ;; ************** Autoinsert templates *****************
+(require 'autoinsert)
+(setq auto-insert-mode t)  ;;; Adds hook to find-files-hook
+(setq auto-insert-directory "~/.emacs.d/templates/auto-insert/")
+(setq auto-insert 'other)
+(setq auto-insert-query nil)
+ 
+;; auto-insert stuff
+(add-hook 'find-file-hooks 'auto-insert)
+(setq auto-insert-alist
+	  '(
+		("\\.cpp$" . ["insert.cpp" auto-update-c-source-file])
+		("\\.h$"   . ["header.h" auto-update-header-file])
+		("\\.c$" . ["insert.c" auto-update-c-source-file])
+		("\\.org$" . ["insert.org" auto-update-defaults])
+		("\\.sh$" . ["insert.sh" auto-update-defaults])
+		("\\.lisp$" . ["insert.lisp" auto-update-defaults])
+		("\\.el$" . ["insert.el" auto-update-defaults])
+		("\\.dot$" . ["insert.dot" auto-update-defaults])
+		("\\.erl$" . ["insert.err" auto-update-defaults])
+		("\\.py$" . ["insert.py" auto-update-defaults])
+		("\\.tex$" . ["insert.tex" auto-update-defaults])
+		("\\.html$" . ["insert.html" auto-update-defaults])
+		("\\.devhelp2$" . ["insert.devhelp2" auto-update-defaults])
+		("\\.ebuild$" . ["insert.ebuild" auto-update-defaults])
+		("\\.sh$" . ["insert.sh" auto-update-defaults])
+		("Doxyfile$" . ["insert.doxyfile" auto-update-defaults])
+		))
+ 
+;; function replaces the string '@@@' by the current file
+;; name. You could use a similar approach to insert name and date into
+;; your file.
+(defun auto-update-header-file ()
+  (save-excursion
+	(while (search-forward "@@@" nil t)
+	  (save-restriction
+		(narrow-to-region (match-beginning 0) (match-end 0))
+		(replace-match (upcase (file-name-nondirectory buffer-file-name)))
+		(subst-char-in-region (point-min) (point-max) ?. ?_)
+		))
+	)
+  )
+ 
+(defun insert-today ()
+  "Insert today's date into buffer"
+  (interactive)
+  (insert (format-time-string "%m-%e-%Y" (current-time))))
+ 
+(defun auto-update-c-source-file ()
+  (save-excursion
+	;; Replace HHHH with file name sans suffix
+	(while (search-forward "HHHH" nil t)
+	  (save-restriction
+		(narrow-to-region (match-beginning 0) (match-end 0))
+		(replace-match (concat (file-name-sans-extension (file-name-nondirectory buffer-file-name)) ".h") t
+					   )
+		))
+	)
+  (save-excursion
+	;; Replace @@@ with file name
+	(while (search-forward "@@@" nil t)
+	  (save-restriction
+		(narrow-to-region (match-beginning 0) (match-end 0))
+		(replace-match (file-name-nondirectory buffer-file-name))
+		))
+	)
+  (save-excursion
+	;; replace DDDD with today's date
+	(while (search-forward "DDDD" nil t)
+	  (save-restriction
+		(narrow-to-region (match-beginning 0) (match-end 0))
+		(replace-match "")
+		(insert-today)
+		))
+	)
+  )
+ 
+(defun auto-replace-file-name ()
+  (save-excursion
+	;; Replace @@@ with file name
+	(while (search-forward "(>>FILE<<)" nil t)
+	  (save-restriction
+		(narrow-to-region (match-beginning 0) (match-end 0))
+		(replace-match (file-name-nondirectory buffer-file-name) t)
+		))
+	)
+  )
+ 
+(defun auto-update-defaults ()
+  (auto-replace-file-name)
+  (auto-replace-file-name-no-ext)
+  (auto-replace-date-time)
+  )
+ 
+(defun auto-replace-file-name-no-ext ()
+  (save-excursion
+	;; Replace @@@ with file name
+	(while (search-forward "(>>FILE_NO_EXT<<)" nil t)
+	  (save-restriction
+		(narrow-to-region (match-beginning 0) (match-end 0))
+		(replace-match (file-name-sans-extension (file-name-nondirectory buffer-file-name)) t)
+		))
+	)
+  )
+ 
+(defun auto-replace-date-time ()
+  (save-excursion
+	(while (search-forward "(>>DATE<<)" nil t)
+	  (save-restriction
+		(narrow-to-region (match-beginning 0) (match-end 0))
+		(replace-match "" t)
+		(insert-today)
+		))))
+   </pre>
+   #+END_HTML
+   模板文件存放于 "~/.emacs.d/templates/auto-insert/" 中，其中， insert.dot 的内容如下：
+   #+BEGIN_SRC graphviz-dot-mode
+   // $Id: (>>FILE<<), (>>DATE<<)
+   digraph Name {
+       node [shape=record fontsize=12 fontname=Courier style=filled];
+       edge[color=blue];
+       rankdir=LR;
+    
+   // XXX: place to put subgraph
+    
+   }
+   #+END_SRC
+
+** 用法示例
+  一个简单的使用示例，有如下步骤：
+
+  * *1:* 打开一个 C 文件\\
+
+    如内核代码中的 drivers/usb/storage/usb.h
+
+  * *2:* 打开一个 dot 文件(/tmp/usb.dot)\\
+
+    auto-insert 会自动插入一些文件内容.
+
+  * *3:* 选中 struct us_data 的定义，并执行 yyc/datastruct-to-dot。\\
+
+    执行完成后， us_data 的数据填写到了 tmp.dot 中，将该 buffer 中的所有内容 kill 掉，并 yank 到 usb.dot 中 XXX 这一行的下面。此时，保存 sub.dot ， 并按下快捷键 : C-cc ， 然后按下 Enter ， 就会自动编译。然后再按下 C-cp 就可以在另外一个 buffer 中预览它了。
+
+    其实到这里，一个 C 语言的 struct 数据结构就已经被画出来了，后面的两个步骤，是为了介绍怎样将多个数据结构联系起来。
+
+  * *4:* 添加其他的 subgraph \\
+
+     我们可以继续添加其他的 subgraph ， 例如 struct usb_ctrlrequest	*cr ，以及 struct usb_sg_request， 并全部做为 subgraph 添加到 usb.dot 中。
+
+  * *5:* 为 subgraph 建立关联\\
+
+    很简单，通过 "->" 画两条线就可以了。
+
+    最后生成的文件如下：
+    #+BEGIN_SRC graphviz-dot-mode
+    digraph USB {
+        node [shape=record fontsize=12 fontname=Courier style=filled];
+        edge[color=blue];
+        rankdir=LR;
+     
+    subgraph cluster_us_data  {
+        node [shape=record fontsize=12 fontname=Courier style=filled];
+        color = lightgray;
+        style=filled;
+        label = "Struct us_data ";
+        edge[color="#2e3436"];
+            node_us_data [shape=record label="<f0>*** STRUCT us_data  ***|\
+    <f2>struct mutex	 dev_mutex\l|\
+    <f3>struct usb_device *pusb_dev\l|\
+    <f4>struct usb_interface *pusb_intf\l|\
+    <f5>struct us_unusual_dev   *unusual_dev\l|\
+    <f6>unsigned long	 fflags\l|\
+    <f7>unsigned long	 dflags\l|\
+    <f8>unsigned int	 send_bulk_pipe\l|\
+    <f9>unsigned int	 recv_bulk_pipe\l|\
+    <f10>unsigned int	 send_ctrl_pipe\l|\
+    <f11>unsigned int	 recv_ctrl_pipe\l|\
+    <f12>unsigned int	 recv_intr_pipe\l|\
+    <f13>char		 *transport_name\l|\
+    <f14>char		 *protocol_name\l|\
+    <f15>__le32		 bcs_signature\l|\
+    <f16>u8		 subclass\l|\
+    <f17>u8		 protocol\l|\
+    <f18>u8		 max_lun\l|\
+    <f19>u8		 ifnum\l|\
+    <f20>u8		 ep_bInterval\l|\
+    <f21>trans_cmnd	 transport\l|\
+    <f22>trans_reset	 transport_reset\l|\
+    <f23>proto_cmnd	 proto_handler\l|\
+    <f24>struct scsi_cmnd *srb\l|\
+    <f25>unsigned int	 tag\l|\
+    <f26>char		 scsi_name[32]\l|\
+    <f27>struct urb	 *current_urb\l|\
+    <f28>struct usb_ctrlrequest *cr\l|\
+    <f29>struct usb_sg_request current_sg\l|\
+    <f30>unsigned char	 *iobuf\l|\
+    <f31>dma_addr_t	 iobuf_dma\l|\
+    <f32>struct task_struct *ctl_thread\l|\
+    <f33>struct completion cmnd_ready\l|\
+    <f34>struct completion notify\l|\
+    <f35>wait_queue_head_t delay_wait\l|\
+    <f36>struct completion scanning_done\l|\
+    <f37>void		 *extra\l|\
+    <f38>extra_data_destructor extra_destructor\l|\
+    <f39>pm_hook		 suspend_resume_hook\l|\
+    <f40>int		 use_last_sector_hacks\l|\
+    <f41>int		 last_sector_retries\l|<f999>\
+    "];
+    }
+     
+    subgraph cluster_usb_ctrlrequest  {
+        node [shape=record fontsize=12 fontname=Courier style=filled];
+        color = lightgray;
+        style=filled;
+        label = "Struct usb_ctrlrequest ";
+        edge[color="#2e3436"];
+            node_usb_ctrlrequest [shape=record label="<f0>*** STRUCT usb_ctrlrequest  ***|\
+    <f2>__u8 bRequestType\l|\
+    <f3>__u8 bRequest\l|\
+    <f4>__le16 wValue\l|\
+    <f5>__le16 wIndex\l|\
+    <f6>__le16 wLength\l|<f999>\
+    "];
+    }
+     
+     
+    subgraph cluster_usb_sg_request  {
+        node [shape=record fontsize=12 fontname=Courier style=filled];
+        color = lightgray;
+        style=filled;
+        label = "Struct usb_sg_request ";
+        edge[color="#2e3436"];
+            node_usb_sg_request [shape=record label="<f0>*** STRUCT usb_sg_request  ***|\
+    <f2>int		 status\l|\
+    <f3>size_t		 bytes\l|\
+    <f4>spinlock_t	 lock\l|\
+    <f5>struct usb_device *dev\l|\
+    <f6>int		 pipe\l|\
+    <f7>int		 entries\l|\
+    <f8>struct urb	 **urbs\l|\
+    <f9>int		 count\l|\
+    <f10>struct completion complete\l|<f999>\
+    "];
+    }
+     
+    node_us_data:f28 -> node_usb_ctrlrequest:f0;
+    node_us_data:f29 -> node_usb_sg_request:f0[color=brown];
+    node_us_data:f29 -> node_usb_sg_request:f999[color=brown];
+     
+    }
+    #+END_SRC
+
+    生成的图下如下：
+    #+BEGIN_HTML
+    [caption width="150" caption="graphviz ds"]<a href="https://dea.googlecode.com/svn/trunk/screenshots/graphviz-ds.png" rel="lightbox"><img src="https://dea.googlecode.com/svn/trunk/screenshots/thumbs/graphviz-ds.png" height="150"/></a>[/caption]
+    #+END_HTML
+
+** 后记
+   功能上还有很多地方可以改进，比如通过 CEDET 的 Semantic 进行语义分析，参考 corge 代码，支持 C++ 中的 class 等等。以后有时间在改改。PS: 貌似写这个 blog 用的时间比写那个 elisp 代码更费时间 ……

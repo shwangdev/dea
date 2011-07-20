@@ -1,0 +1,15 @@
+keywords:
+ahei, 阿黑, 极限手指, emacs, ide, linux, c/c++, vim, vi, java, text, editor, 算法, 数据结构, 人工智能, screenshot, 截图, 补全, auto complete, 代码补全, term, select-buffer, 查看buffer, ubuntu, windows, putty, ediff, 比较文件, 代码折叠, mode-line, 状态栏, 翻译, hippie-expand, 配色, icicle, icicles, doremi, palette, 调色板, face, 颜色, emacser, color, theme, 皮肤, 光标, cursor, cursor-chg, cursor-change, 自动完成, cedet,semantic,senator,imenu,ede,cogre, eieio, speedbar, srecode, nutch, hadoop, se, search engine, 抓取, crawler, spider, crawl, 分布式, hdfs, 搜索引擎, control, ctrl, caps lock, 插件, plugin, snippet, yasnippet, highlight-symbol,highlight,eclipse, 浏览器, browser, 二分调试法, ssh, tsocks, sockscap, genproxy, LD_PRELOAD, emacser.com,paypal, godaddy, 叶文斌, 域名转发, 域名转向, scratch, post-command-hook, lambda, lambda表达式, proxy, 代理, xtreemhost, byethost, bluehost, A record, wordpress, lightbox, favicon, Gallery, Permalink, Redirection, seo, Google Analytics, twitter, keymap, process sentinel, svn-status, textmate, akismet, wp-syntax, keychain, ssh-agent, expect, ssh-copy-id, readlink, mapreduce, pulse, 淡入淡出, highlight-tail, 隐式转发, weblogger
+
+footer.php:
+<center>
+<br><br><br><br>
+Copyright (C) 2009 <a href="http://ahei.yo2.cn" target="_blank">ahei</a><br>
+qq/msn/email: <a href="mailto:ahei0802@126.com">ahei0802@126.com</a><br>
+<script language="javascript" src="http://count23.51yes.com/click.aspx?id=238764785&logo=1" charset="gb2312"></script>
+
+<script language="javascript" type="text/javascript" src="http://js.users.51.la/3348284.js"></script>
+<noscript><a href="http://www.51.la/?3348284" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3348284.asp" style="border:none" /></a></noscript>
+</center>
+
+ahei的博客；阿黑的博客；本博客主要记录一些我在工作和学习中遇到的和解决的问题，内容涉及emacs，vim，linux，c/c++，java，算法和数据结构，以及人工智能

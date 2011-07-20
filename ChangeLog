@@ -1,0 +1,99 @@
+2011-03-27  ahei  <ahei0802@gmail.com>
+
+	* Add ipython, pylint, pydb.
+
+2010-12-26  ahei  <ahei0802@gmail.com>
+
+	* When ~/my.emacs is exist, DEA wll load it.
+
+2010-12-03  ahei  <ahei0802@gmail.com>
+
+	* Add ezbl.
+
+2010-11-30  ahei  <ahei0802@gmail.com>
+
+	* Add ppm-gen to display bmp file.
+
+2010-11-29  ahei  <ahei0802@gmail.com>
+
+	* Add cflow.
+
+2010-11-28  ahei  <ahei0802@gmail.com>
+
+	* Add rainbow-mode and hexview-mode.
+
+2010-11-27  ahei  <ahei0802@gmail.com>
+
+	* Release version 1.4.
+
+	* Add settings for perl mode.
+
+2010-11-21  ahei  <ahei0802@gmail.com>
+
+	* Delete msf-abbrev, use yasnippet replace it.
+
+2010-09-24  ahei  <ahei0802@gmail.com>
+
+	* Add flymake, it is a strong syntax check tool.
+
+2010-04-09  ahei  <ahei0802@gmail.com>
+
+	* Update cedet settings for latest cvs version of cedet.
+
+2010-04-06  ahei  <ahei0802@gmail.com>
+
+	* Add moccur-edit, and update latest version of color-moccur.
+
+2010-04-05  ahei  <ahei0802@gmail.com>
+
+	* Add eval-after-load.el, use `eval-after-load' technique to make
+	  start emacs faster.
+
+2010-03-25  ahei  <ahei0802@gmail.com>
+
+	* Add erc-highlight-nicknames to highlight nicknames.
+	* Replace desktop with wcy-desktop, because wcy-desktop is faster than desktop.
+
+2010-03-22  ahei  <ahei0802@gmail.com>
+
+	* Add emaci to replace view-mode-settings.
+
+2010-02-26  ahei  <ahei0802@gmail.com>
+
+	* Add highlight-tail.
+
+2010-02-19  ahei  <ahei0802@gmail.com>
+
+	* Add pulse-settings.el.
+
+2009-12-18  ahei  <ahei0802@gmail.com>
+
+	* Add todochiku, this package like growl on Mac OS.
+
+2009-11-27  ahei  <ahei0802@gmail.com>
+
+	* Add source complete for emacs lisp features.
+
+2009-11-26  ahei  <ahei0802@gmail.com>
+
+	* Add highlight-symbol.
+
+2009-11-25  ahei  <ahei0802@gmail.com>
+
+	* Release version 1.3.
+
+2009-12-18  ahei  <ahei0802@126.com>
+
+	* Add settings of todochiku.
+
+2009-08-22  ahei  <ahei0802@126.com>
+
+	* Release 1.2
+
+2009-03-24  ahei  <ahei0802@126.com>
+
+	* Release 1.1
+
+2008-11-05  ahei  <ahei0802@126.com>
+
+	* Release 1.0

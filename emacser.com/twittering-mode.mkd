@@ -1,0 +1,62 @@
+*在Emacs中使用twitter/新浪微博*
+
+<span style="color: #0000ff;">作者: </span><a href="about.htm#xwl" target="_blank"><span style="color: #0000ff;"><b>xwl</b></span></a>
+
+想在 Emacs 里登录 twitter, weibo... 吗？试一下 twittering-mode.el 吧！它目前支持同时登录
+twitter, sina weibo, douban...(这里指的是我 fork 的版本），先上图：
+
+<!--more-->
+
+[caption width="150" caption="cflow"]<a href="https://dea.googlecode.com/svn/trunk/screenshots/twittering-mode.png" rel="lightbox"><img src="https://dea.googlecode.com/svn/trunk/screenshots/thumbs/thumbs_twittering-mode.png" height="150"/></a>[/caption]
+
+* 新手上路
+=========
+
+0. require it, 下载链接在最后面
+
+    (require 'twittering-mode)
+
+1. 避免每次都需要输入密码 (需要安装 gpg )
+
+    (setq twittering-use-master-password t)
+
+2. 一些网站（如 sina）不喜欢 SSL.
+
+    (setq twittering-allow-insecure-server-cert t)
+    (setq twittering-oauth-use-ssl nil)
+    (setq twittering-use-ssl nil)
+
+3. 状态栏上显示未读推数；显示头像
+
+    (twittering-enable-unread-status-notifier)
+    (setq-default twittering-icon-mode t)
+
+4. 启动时默认打开的 timeline.
+
+    (setq twittering-initial-timeline-spec-string `(":home@sina"
+                                                     ; ":home@douban"
+                                                     ))
+
+5. 来吧: M-x twit
+
+* 玩转推特
+=========
+
+以下是一些基本操作, 相關快捷鍵可參閱 mode help (F1 m) 或自行定義:
+
+1. 发推：M-x twittering-update-status-interactive
+
+2. 轉發: M-x twittering-retweet
+
+3. 加評論轉發: M-x twittering-organic-retweet
+
+4. 評論: M-x twittering-reply-to-user
+
+5. 查看某個 timeline: M-x twittering-other-user-timeline 或 twittering-visit-timeline
+
+6. Follow/Unfollow: M-x twittering-follow, M-x twittering-unfollow
+
+7. 收藏: M-x twittering-favorite
+
+
+代码位于：https://github.com/xwl/twittering-mode, 欢迎上 #emacs-cn@irc.debian.org 来讨论。
